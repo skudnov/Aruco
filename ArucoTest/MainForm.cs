@@ -114,9 +114,10 @@ namespace ArucoTest
                         ArucoInvoke.RefineDetectedMarkers(_frameCopy, ArucoBoard, corners, ids, rejected, null, null, 10, 3, true, null, _detectorParameters);
                        
                        ArucoInvoke.DrawDetectedMarkers(_frameCopy, corners, ids, new MCvScalar(0, 255, 0));
+
                         if (!_cameraMatrix.IsEmpty && !_distCoeffs.IsEmpty)
                         {
-                            ArucoInvoke.EstimatePoseSingleMarkers(corners, 0.05f, _cameraMatrix, _distCoeffs, rvecs, tvecs);
+                            //ArucoInvoke.EstimatePoseSingleMarkers(corners, 0.5f, _cameraMatrix, _distCoeffs, rvecs, tvecs);
                             ArucoInvoke.EstimatePoseSingleMarkers(corners, markersLength, _cameraMatrix, _distCoeffs, rvecs, tvecs);
                             for (int i = 0; i < ids.Size; i++)
                             {
@@ -138,14 +139,18 @@ namespace ArucoTest
                                 }
                             }
                         }
-
-                        if (_useThisFrame)
+                        else if (ids.Size >= 12)
                         {
                             _allCorners.Push(corners);
                             _allIds.Push(ids);
                             _markerCounterPerFrame.Push(new int[] { corners.Size });
                             _imageSize = _frame.Size;
-                            _useThisFrame = false;
+                            double repError = ArucoInvoke.CalibrateCameraAruco(_allCorners, _allIds, _markerCounterPerFrame, ArucoBoard, _imageSize,
+                               _cameraMatrix, _distCoeffs, null, null, CalibType.Default, new MCvTermCriteria(30, double.Epsilon));
+                            _allCorners.Clear();
+                            _allIds.Clear();
+                            _markerCounterPerFrame.Clear();
+                            _imageSize = Size.Empty;
                         }
                     }
                     cameraImageBox.Image = _frameCopy.Clone();
@@ -158,18 +163,6 @@ namespace ArucoTest
             {
                 if (_captureInProgress)
                 {
-                    int totalPoints = _markerCounterPerFrame.ToArray().Sum();
-                    if (totalPoints > 0)
-                    {
-                        double repError = ArucoInvoke.CalibrateCameraAruco(_allCorners, _allIds, _markerCounterPerFrame, ArucoBoard, _imageSize,
-                           _cameraMatrix, _distCoeffs, null, null, CalibType.Default, new MCvTermCriteria(30, double.Epsilon));
-                        _allCorners.Clear();
-                        _allIds.Clear();
-                        _markerCounterPerFrame.Clear();
-                        _imageSize = Size.Empty;
-
-                    }
-
                     //stop the capture
                     cameraButton.Text = "Start Capture";
                     _capture.Pause();
