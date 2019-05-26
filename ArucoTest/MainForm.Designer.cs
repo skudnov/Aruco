@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.cameraButton = new System.Windows.Forms.Button();
             this.cameraImageBox = new Emgu.CV.UI.ImageBox();
+            this.lb_result = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.cameraImageBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -54,11 +55,21 @@
             this.cameraImageBox.TabIndex = 2;
             this.cameraImageBox.TabStop = false;
             // 
+            // lb_result
+            // 
+            this.lb_result.AutoSize = true;
+            this.lb_result.Location = new System.Drawing.Point(421, 13);
+            this.lb_result.Name = "lb_result";
+            this.lb_result.Size = new System.Drawing.Size(35, 13);
+            this.lb_result.TabIndex = 3;
+            this.lb_result.Text = "label1";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(885, 573);
+            this.Controls.Add(this.lb_result);
             this.Controls.Add(this.cameraImageBox);
             this.Controls.Add(this.cameraButton);
             this.Margin = new System.Windows.Forms.Padding(2);
@@ -67,12 +78,14 @@
             this.Load += new System.EventHandler(this.MainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.cameraImageBox)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
         private System.Windows.Forms.Button cameraButton;
         private Emgu.CV.UI.ImageBox cameraImageBox;
+        private System.Windows.Forms.Label lb_result;
     }
 }
 

@@ -111,7 +111,7 @@ namespace ArucoTest
                     
                     if (ids.Size > 0)
                     {
-                        ArucoInvoke.RefineDetectedMarkers(_frameCopy, ArucoBoard, corners, ids, rejected, null, null, 10, 3, true, null, _detectorParameters);
+                       // ArucoInvoke.RefineDetectedMarkers(_frameCopy, ArucoBoard, corners, ids, rejected, null, null, 10, 3, true, null, _detectorParameters);
                        
                        ArucoInvoke.DrawDetectedMarkers(_frameCopy, corners, ids, new MCvScalar(0, 255, 0));
 
@@ -132,9 +132,14 @@ namespace ArucoTest
                                     tvecMat.CopyTo(values);
                                     tvec.Push(values);
 
+                                    if (ids.Size == 1)
+                                    {
+                                        coordinates(values, ids[i]);
+                                    }
+
 
                                     ArucoInvoke.DrawAxis(_frameCopy, _cameraMatrix, _distCoeffs, rvec, tvec,
-                                       markersLength * 0.5f);
+                                       markersLength * 0.3f);
 
                                 }
                             }
@@ -157,6 +162,12 @@ namespace ArucoTest
                 }
             }
         }
+
+        private void coordinates(double[] values, int ids)
+        {
+            this.lb_result.BeginInvoke((MethodInvoker)(() => this.lb_result.Text = "id marker: [" + ids + "] x = " + values[0] + " y = " + values[1] + " z = " + values[2]));
+        }
+
         private void cameraButton_Click(object sender, EventArgs e)
         {
             if (_capture != null)
